@@ -107,7 +107,7 @@ async function main() {
         status: 'Active',
         effectiveDate: aeDesignationDate,
         approvedById: adminUser.id,
-        regulatoryRefs: JSON.stringify(['§5.25', '§5.21', '§5.23']),
+        regulatoryRefs: ['§5.25', '§5.21', '§5.23'],
         fileUrl: '/documents/ae-designation-2024.pdf',
       },
     });
@@ -125,7 +125,7 @@ async function main() {
         status: 'Active',
         effectiveDate: aeDesignationDate,
         approvedById: adminUser.id,
-        regulatoryRefs: JSON.stringify(['§5.21', '§5.23', '§5.25', '§5.27']),
+        regulatoryRefs: ['§5.21', '§5.23', '§5.25', '§5.27'],
         fileUrl: null,
       },
     });
@@ -140,7 +140,7 @@ async function main() {
       likelihood: 'Frequent', consequence: 'Major', riskRating: 'High',
       controls: 'Weather briefing required before all jump operations. S&TA has authority to halt operations. METARs checked every 30 minutes.',
       revisedLikelihood: 'Occasional', revisedConsequence: 'Minor', revisedRating: 'Medium',
-      regulatoryRefs: JSON.stringify(['§5.5','§5.7','§5.91']),
+      regulatoryRefs: ['§5.5','§5.7','§5.91'],
       alarpJustification: 'All reasonably practicable weather monitoring controls are in place. Mandatory 30-minute METAR checks, S&TA halt authority, and minimum ceiling standards have reduced likelihood from Frequent to Occasional and consequence from Major to Minor. Further reduction would require prohibitive forecast technology or permanent weather-protected operations not feasible for outdoor skydiving.',
     },
     {
@@ -149,7 +149,7 @@ async function main() {
       likelihood: 'Occasional', consequence: 'Major', riskRating: 'High',
       controls: 'Wind limits posted at manifest. Tandem limit 14 kts surface, students 12 kts. Operations suspended when limits exceeded. Pilot has final authority.',
       revisedLikelihood: 'Remote', revisedConsequence: 'Minor', revisedRating: 'Low',
-      regulatoryRefs: JSON.stringify(['§5.5','§5.7','§5.91']),
+      regulatoryRefs: ['§5.5','§5.7','§5.91'],
       alarpJustification: 'ALARP achieved. Strict published wind limits, mandatory cessation of operations when exceeded, and pilot final authority reduce risk to Low. Residual risk is the occurrence of unexpected gusts between measurement intervals — further reduction not reasonably practicable.',
     },
     {
@@ -158,7 +158,7 @@ async function main() {
       likelihood: 'Remote', consequence: 'Catastrophic', riskRating: 'High',
       controls: 'All gear inspected by FAA-certified rigger per 14 CFR Part 65. Gear checks pre-flight by instructor. AAD installed on all student gear.',
       revisedLikelihood: 'Improbable', revisedConsequence: 'Major', revisedRating: 'Medium',
-      regulatoryRefs: JSON.stringify(['§5.5','§5.7','§5.91','§5.95']),
+      regulatoryRefs: ['§5.5','§5.7','§5.91','§5.95'],
       alarpJustification: 'Residual risk is Medium (Improbable × Major). Controls are as stringent as FAA regulations permit: certified rigger inspection, mandatory AADs on student gear, pre-flight checks. Further risk reduction is constrained by physical probability limits of equipment failure and the nature of parachute sport. ALARP principle satisfied.',
     },
     {
@@ -167,7 +167,7 @@ async function main() {
       likelihood: 'Remote', consequence: 'Catastrophic', riskRating: 'High',
       controls: '100-hr inspections current. Pre-flight checklist mandatory. Pilot trained in emergency procedures. ERP activated on any aircraft emergency.',
       revisedLikelihood: 'Improbable', revisedConsequence: 'Major', revisedRating: 'Medium',
-      regulatoryRefs: JSON.stringify(['§5.5','§5.7','§5.17']),
+      regulatoryRefs: ['§5.5','§5.7','§5.17'],
       alarpJustification: 'Residual risk is Medium (Improbable × Major). Aircraft maintenance complies with 14 CFR Part 43 and manufacturer requirements. Additional controls (100-hr inspections, mandatory pre-flights, ERP) exceed minimum regulatory requirements. Residual risk is the irreducible mechanical failure probability inherent to aviation. ALARP demonstrated.',
     },
     {
@@ -176,7 +176,7 @@ async function main() {
       likelihood: 'Occasional', consequence: 'Major', riskRating: 'High',
       controls: 'Medical screening form completed for all students. AED on site. CPR-certified staff on duty at all times. EMS contact numbers posted at manifest.',
       revisedLikelihood: 'Remote', revisedConsequence: 'Minor', revisedRating: 'Low',
-      regulatoryRefs: JSON.stringify(['§5.17','§5.91']),
+      regulatoryRefs: ['§5.17','§5.91'],
       alarpJustification: 'ALARP achieved. Medical screening eliminates known at-risk participants, on-site AED and CPR capability provides immediate response. Residual risk reduced to Low. Further reduction would require medical personnel on site for every jump — not proportionate to risk given Low residual rating.',
     },
   ];
@@ -208,31 +208,31 @@ async function main() {
       locationId: oceanside.id, reporterName: null, isAnonymous: true,
       type: 'Weather', severity: 'High', status: 'In_Review',
       description: 'Cloud ceiling dropped to 1,500 AGL unexpectedly during afternoon operations. Jump run was already in progress.',
-      regulatoryRefs: JSON.stringify(['§5.91']),
+      regulatoryRefs: ['§5.91'],
     },
     {
       locationId: oceanside.id, reporterName: 'John Smith', isAnonymous: false,
       type: 'Equipment', severity: 'Critical', status: 'Mitigated',
       description: 'Reserve pilot chute spring found to be fatigued during routine inspection. Gear removed from service immediately.',
-      regulatoryRefs: JSON.stringify(['§5.91','§5.95']),
+      regulatoryRefs: ['§5.91','§5.95'],
     },
     {
       locationId: hawaii.id, reporterName: null, isAnonymous: true,
       type: 'Human_Factors', severity: 'Medium', status: 'Open',
       description: 'Instructor fatigue observed during late afternoon loads. Worked 12+ hours.',
-      regulatoryRefs: JSON.stringify(['§5.91']),
+      regulatoryRefs: ['§5.91'],
     },
     {
       locationId: lasVegas.id, reporterName: 'Maria Santos', isAnonymous: false,
       type: 'Operational', severity: 'Medium', status: 'Closed',
       description: 'Manifest error resulted in student jumping without complete paperwork on file.',
-      regulatoryRefs: JSON.stringify([]),
+      regulatoryRefs: [],
     },
     {
       locationId: newYork.id, reporterName: null, isAnonymous: true,
       type: 'Aircraft', severity: 'High', status: 'Open',
       description: 'Unusual engine vibration reported by pilot during climb. Aircraft grounded pending inspection.',
-      regulatoryRefs: JSON.stringify(['§5.17','§5.91']),
+      regulatoryRefs: ['§5.17','§5.91'],
     },
   ];
 
@@ -320,11 +320,11 @@ async function main() {
 
   // Default KPIs for all locations (§5.75 with indicator type)
   const defaultKpis = [
-    { name: 'Reserve Deployments per 1,000 Jumps', frequency: 'Monthly',   targetValue: 1.5,  measureMethod: 'Count reserve deployments / total jumps × 1000', regulatoryRefs: JSON.stringify(['§5.75']), indicatorType: 'lagging', alertThreshold: 1.5, alertDirection: 'above', dataSource: 'Jump manifest log' },
-    { name: 'Average Days to Close Incident',       frequency: 'Monthly',   targetValue: 14,   measureMethod: 'Sum of (close - open) / count closed incidents',   regulatoryRefs: JSON.stringify(['§5.75']), indicatorType: 'lagging', alertThreshold: 14,  alertDirection: 'above', dataSource: 'Incident reports module' },
-    { name: 'Open High/Critical Hazards',           frequency: 'Monthly',   targetValue: 0,    measureMethod: 'Count risk register items rated High or Critical with no controls', regulatoryRefs: JSON.stringify(['§5.75']), indicatorType: 'lagging', alertThreshold: 0, alertDirection: 'above', dataSource: 'Hazard register' },
-    { name: 'Safety Reports Submitted',             frequency: 'Monthly',   targetValue: 5,    measureMethod: 'Count hazard reports submitted this period',        regulatoryRefs: JSON.stringify(['§5.75']), indicatorType: 'leading', alertThreshold: 2, alertDirection: 'below', dataSource: 'Hazard reporting system' },
-    { name: 'ERP Exercise Compliance',              frequency: 'Quarterly', targetValue: 1,    measureMethod: 'Boolean — 1 if exercise completed within 6 months, 0 if not', regulatoryRefs: JSON.stringify(['§5.17']), indicatorType: 'leading', alertThreshold: 0, alertDirection: 'below', dataSource: 'ERP exercises log' },
+    { name: 'Reserve Deployments per 1,000 Jumps', frequency: 'Monthly',   targetValue: 1.5,  measureMethod: 'Count reserve deployments / total jumps × 1000', regulatoryRefs: ['§5.75'], indicatorType: 'lagging', alertThreshold: 1.5, alertDirection: 'above', dataSource: 'Jump manifest log' },
+    { name: 'Average Days to Close Incident',       frequency: 'Monthly',   targetValue: 14,   measureMethod: 'Sum of (close - open) / count closed incidents',   regulatoryRefs: ['§5.75'], indicatorType: 'lagging', alertThreshold: 14,  alertDirection: 'above', dataSource: 'Incident reports module' },
+    { name: 'Open High/Critical Hazards',           frequency: 'Monthly',   targetValue: 0,    measureMethod: 'Count risk register items rated High or Critical with no controls', regulatoryRefs: ['§5.75'], indicatorType: 'lagging', alertThreshold: 0, alertDirection: 'above', dataSource: 'Hazard register' },
+    { name: 'Safety Reports Submitted',             frequency: 'Monthly',   targetValue: 5,    measureMethod: 'Count hazard reports submitted this period',        regulatoryRefs: ['§5.75'], indicatorType: 'leading', alertThreshold: 2, alertDirection: 'below', dataSource: 'Hazard reporting system' },
+    { name: 'ERP Exercise Compliance',              frequency: 'Quarterly', targetValue: 1,    measureMethod: 'Boolean — 1 if exercise completed within 6 months, 0 if not', regulatoryRefs: ['§5.17'], indicatorType: 'leading', alertThreshold: 0, alertDirection: 'below', dataSource: 'ERP exercises log' },
   ];
 
   for (const loc of [oceanside, hawaii, lasVegas, newYork]) {
@@ -346,7 +346,7 @@ async function main() {
         status: 'Active',
         effectiveDate: new Date('2024-03-01'),
         approvedById: adminUser.id,
-        regulatoryRefs: JSON.stringify(['§5.27', '§5.17']),
+        regulatoryRefs: ['§5.27', '§5.17'],
         fileUrl: null,
       },
     });
@@ -364,7 +364,7 @@ async function main() {
         status: 'Active',
         effectiveDate: aeDesignationDate,
         approvedById: adminUser.id,
-        regulatoryRefs: JSON.stringify(['§5.1', '§5.3', '§5.21', '§5.51', '§5.71', '§5.91']),
+        regulatoryRefs: ['§5.1', '§5.3', '§5.21', '§5.51', '§5.71', '§5.91'],
         fileUrl: null,
       },
     });
@@ -382,7 +382,7 @@ async function main() {
         status: 'Active',
         effectiveDate: new Date('2024-06-01'),
         approvedById: adminUser.id,
-        regulatoryRefs: JSON.stringify(['§5.51', '§5.91']),
+        regulatoryRefs: ['§5.51', '§5.91'],
         fileUrl: null,
       },
     });
@@ -394,13 +394,13 @@ async function main() {
     data: {
       locationId: oceanside.id,
       date: new Date('2026-05-01'),
-      attendees: JSON.stringify(['Alex Chen', 'Jordan Lee', 'Capt. Mike Davis']),
+      attendees: ['Alex Chen', 'Jordan Lee', 'Capt. Mike Davis'],
       agenda: '1. Review Q1 hazard reports\n2. Risk register update — H-003 controls review\n3. ERP drill scheduling',
       notes: 'Three open hazard reports reviewed. H-003 controls deemed adequate after rigger certification audit. ERP drill scheduled for May 15.',
-      actionItems: JSON.stringify([
+      actionItems: [
         { id: 1, description: 'Schedule ERP full drill', assignedTo: 'Alex Chen', dueDate: '2026-05-15', status: 'Open' },
         { id: 2, description: 'Update H-002 control measures documentation', assignedTo: 'Jordan Lee', dueDate: '2026-05-20', status: 'Open' },
-      ]),
+      ],
     },
   });
   console.log('  ✓ Sample safety meeting seeded');

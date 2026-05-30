@@ -10,7 +10,6 @@ const { logger } = require('./utils/logger');
 const { errorHandler } = require('./middleware/errorHandler');
 const { scheduleOverdueNotifications } = require('./services/notificationScheduler');
 const emailSvc = require('./services/emailService');
-const { transformResponse } = require('./utils/transformResponse');
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -57,13 +56,6 @@ app.use('/api', apiLimiter);
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Transform SQLite JSON string fields back to arrays for all API responses
-app.use((req, res, next) => {
-  const originalJson = res.json.bind(res);
-  res.json = (data) => originalJson(transformResponse(data));
-  next();
-});
 
 // Static files (QR codes, uploads)
 app.use('/public', express.static(path.join(__dirname, '../public')));

@@ -1,10 +1,9 @@
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-3.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -96,7 +95,7 @@ model HazardReport {
   severity      String
   status        String   @default("Submitted")   // lifecycle stage
   photoUrl      String?
-  regulatoryRefs String  @default("[]")
+  regulatoryRefs Json    @default("[]")
 
   // §5.71(a)(7) — Confidential reporting
   confidentialReport  Boolean  @default(false)
@@ -106,7 +105,7 @@ model HazardReport {
 
   // Investigation (§5.71, §5.73)
   rootCauseAnalysis        String?
-  contributingFactors      String    @default("[]")
+  contributingFactors      Json      @default("[]")
   investigationCompletedAt DateTime?
   investigatedById         String?
 
@@ -149,7 +148,7 @@ model HazardReport {
 
   // Reporter Feedback Loop (§5.93)
   reporterNotifiedAt DateTime?
-  notificationLog    String   @default("[]")
+  notificationLog    Json     @default("[]")
 
   // §5.95 — Records retention
   retentionCategory  String?
@@ -186,7 +185,7 @@ model RiskRegister {
   revisedConsequence String?
   revisedRating      String?
   dueDate            DateTime?
-  regulatoryRefs     String   @default("[]")
+  regulatoryRefs     Json     @default("[]")
   notes              String?
 
   // §5.55 — ALARP & Risk Acceptance
@@ -221,12 +220,12 @@ model Incident {
   correctiveAction   String?
   followUpDate       DateTime?
   closedAt           DateTime?
-  regulatoryRefs     String    @default("[]")
-  timeline           String    @default("[]")
+  regulatoryRefs     Json      @default("[]")
+  timeline           Json      @default("[]")
 
   // §5.73 — SRM fields for incident investigation (matches HazardReport)
   rootCauseAnalysis        String?
-  contributingFactors      String    @default("[]")
+  contributingFactors      Json      @default("[]")
   investigationCompletedAt DateTime?
   investigatedById         String?
 
@@ -258,7 +257,7 @@ model Incident {
   verificationCompletedAt DateTime?
   verifiedById            String?
 
-  notificationLog String @default("[]")
+  notificationLog Json   @default("[]")
 
   // §5.95 — Records retention
   retentionCategory  String?
@@ -286,7 +285,7 @@ model Document {
   status         String    @default("Draft")
   effectiveDate  DateTime?
   approvedById   String?
-  regulatoryRefs String    @default("[]")
+  regulatoryRefs Json      @default("[]")
   parentId       String?
 
   // §5.95 — Records retention
@@ -315,8 +314,8 @@ model Kpi {
   currentValue   Float?
   measureMethod  String?
   status         String?
-  regulatoryRefs String   @default("[]")
-  history        String   @default("[]")
+  regulatoryRefs Json     @default("[]")
+  history        Json     @default("[]")
 
   // §5.75 — SPI attributes
   indicatorType      String?   // "leading" | "lagging"
@@ -340,10 +339,10 @@ model Meeting {
   id          String   @id @default(uuid())
   locationId  String
   date        DateTime
-  attendees   String   @default("[]")
+  attendees   Json     @default("[]")
   agenda      String?
   notes       String?
-  actionItems String   @default("[]")
+  actionItems Json     @default("[]")
 
   // §5.95 — Records retention
   retentionCategory  String?
@@ -364,7 +363,7 @@ model ErpExercise {
   locationId   String
   date         DateTime
   type         String
-  participants String   @default("[]")
+  participants Json     @default("[]")
   notes        String?
   createdAt    DateTime @default(now())
 
@@ -394,14 +393,14 @@ model AuditItem {
   locationId        String
   title             String
   description       String?
-  checklistItems    String    @default("[]")
+  checklistItems    Json      @default("[]")
   status            String    @default("Scheduled")
   scheduledDate     DateTime?
   completedDate     DateTime?
   findings          String?
-  correctiveActions String    @default("[]")
+  correctiveActions Json      @default("[]")
   frequency         String?
-  regulatoryRefs    String    @default("[]")
+  regulatoryRefs    Json      @default("[]")
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -543,11 +542,11 @@ model SafetyBulletin {
   summary          String
   content          String
   linkedHazardId   String?
-  regulatoryRefs   String   @default("[]")
+  regulatoryRefs   Json     @default("[]")
   publishedAt      DateTime?
   status           String   @default("Draft")  // Draft / Published / Archived
   publishedById    String?
-  acknowledgedBy   String   @default("[]")     // JSON array of user IDs
+  acknowledgedBy   Json     @default("[]")     // JSON array of user IDs
 
   // §5.95 — Records retention
   retentionCategory  String?
@@ -572,7 +571,7 @@ model ChangeRequest {
   description     String
   proposedDate    DateTime?
   status          String   @default("Submitted") // Submitted / SRM_Required / SRM_Complete / Approved / Implemented
-  linkedHazardIds String   @default("[]")
+  linkedHazardIds Json     @default("[]")
   approvedById    String?
   approvedAt      DateTime?
   implementedAt   DateTime?
