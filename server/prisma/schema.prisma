@@ -1,0 +1,606 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite does not support enums — stored as String, validated in app layer
+
+model Location {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  qrCodeUrl   String?
+  timezone    String   @default("America/Los_Angeles")
+  address     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // §5.25 — Accountable Executive designation
+  accountableExecutiveUserId  String?
+  aeDesignationDate           DateTime?
+  aeDesignationDocumentUrl    String?
+
+  users               User[]
+  hazardReports       HazardReport[]
+  riskRegister        RiskRegister[]
+  incidents           Incident[]
+  documents           Document[]
+  kpis                Kpi[]
+  meetings            Meeting[]
+  erpExercises        ErpExercise[]
+  erpContacts         ErpContact[]
+  auditItems          AuditItem[]
+  notifications       Notification[]
+  auditLogs           AuditLog[]
+  safetyAccountability SafetyAccountability[]
+  interfacingOrgs     InterfacingOrganization[]
+  trainingRecords     TrainingRecord[]
+  safetyBulletins     SafetyBulletin[]
+  changeRequests      ChangeRequest[]
+  erpDocuments        ErpDocument[]
+
+  @@map("locations")
+}
+
+model User {
+  id                 String   @id @default(uuid())
+  name               String
+  email              String   @unique
+  passwordHash       String
+  role               String   @default("employee")
+  locationId         String?
+  isActive           Boolean  @default(true)
+  emailNotifications Boolean  @default(true)
+
+  // §5.25 — Accountable Executive flag
+  isAccountableExecutive Boolean @default(false)
+  aeAuthorityStatement   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  location              Location?      @relation(fields: [locationId], references: [id])
+  assignedIncidents     Incident[]     @relation("AssignedIncidents")
+  riskItems             RiskRegister[] @relation("ResponsiblePerson")
+  auditLogs             AuditLog[]
+  notifications         Notification[]
+  approvedDocs          Document[]     @relation("ApprovedDocuments")
+  investigatedHazards   HazardReport[] @relation("HazardInvestigatedBy")
+  assignedHazardActions HazardReport[] @relation("HazardActionAssigned")
+  verifiedHazards       HazardReport[] @relation("HazardVerifiedBy")
+  deidentifiedHazards   HazardReport[] @relation("HazardDeidentifiedBy")
+  trainingRecords       TrainingRecord[]
+  createdTrainingRecords TrainingRecord[] @relation("TrainingCreatedBy")
+  publishedBulletins    SafetyBulletin[] @relation("BulletinPublishedBy")
+  sentNotifications     HazardNotification[] @relation("NotificationSentBy")
+  createdChangeRequests ChangeRequest[]      @relation("ChangeCreatedBy")
+  approvedChangeRequests ChangeRequest[]     @relation("ChangeApprovedBy")
+  riskAcceptedItems     RiskRegister[]       @relation("RiskAcceptedBy")
+
+  @@map("users")
+}
+
+model HazardReport {
+  id            String  @id @default(uuid())
+  locationId    String
+  reporterName  String?
+  reporterEmail String?
+  isAnonymous   Boolean  @default(false)
+  type          String
+  description   String
+  severity      String
+  status        String   @default("Submitted")   // lifecycle stage
+  photoUrl      String?
+  regulatoryRefs String  @default("[]")
+
+  // §5.71(a)(7) — Confidential reporting
+  confidentialReport  Boolean  @default(false)
+  deIdentifiedDesc    String?
+  deIdentifiedById    String?
+  deIdentifiedAt      DateTime?
+
+  // Investigation (§5.71, §5.73)
+  rootCauseAnalysis        String?
+  contributingFactors      String    @default("[]")
+  investigationCompletedAt DateTime?
+  investigatedById         String?
+
+  // Initial Risk Assessment (§5.5, §5.7, §5.91, §5.95)
+  initialLikelihood  String?
+  initialConsequence String?
+  initialRiskRating  String?
+
+  // Controls / Mitigation (§5.5, §5.7, §5.91)
+  controlMeasures   String?
+  controlType       String?
+  sopUpdated        Boolean  @default(false)
+  trainingUpdated   Boolean  @default(false)
+  equipmentUpgraded Boolean  @default(false)
+
+  // Action Tracking
+  actionAssignedToId String?
+  actionDueDate      DateTime?
+  actionCompletedAt  DateTime?
+  actionNotes        String?
+
+  // Residual Risk (after controls — ALARP)
+  residualLikelihood  String?
+  residualConsequence String?
+  residualRiskRating  String?
+
+  // §5.55 — Risk Acceptance Authority
+  riskAcceptedById     String?
+  riskAcceptedAt       DateTime?
+  riskAcceptanceNotes  String?
+  alarpJustification   String?
+
+  // Verification (§5.7, §5.9, §5.93, §5.95)
+  verificationStatus      String   @default("Pending")
+  verificationNotes       String?
+  verificationCompletedAt DateTime?
+  verifiedById            String?
+  newHazardsIntroduced    Boolean  @default(false)
+  newHazardDescription    String?
+
+  // Reporter Feedback Loop (§5.93)
+  reporterNotifiedAt DateTime?
+  notificationLog    String   @default("[]")
+
+  // §5.95 — Records retention
+  retentionCategory  String?
+  retentionExpiresAt DateTime?
+  archivedAt         DateTime?
+  archiveReason      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  location         Location  @relation(fields: [locationId], references: [id])
+  incident         Incident?
+  investigatedBy   User?     @relation("HazardInvestigatedBy", fields: [investigatedById],   references: [id])
+  actionAssignedTo User?     @relation("HazardActionAssigned", fields: [actionAssignedToId], references: [id])
+  verifiedBy       User?     @relation("HazardVerifiedBy",     fields: [verifiedById],       references: [id])
+  deIdentifiedBy   User?     @relation("HazardDeidentifiedBy", fields: [deIdentifiedById],   references: [id])
+  externalNotifications HazardNotification[]
+
+  @@map("hazard_reports")
+}
+
+model RiskRegister {
+  id                 String   @id @default(uuid())
+  locationId         String
+  hazardIdLabel      String
+  description        String
+  likelihood         String
+  consequence        String
+  riskRating         String
+  controls           String?
+  responsibleUserId  String?
+  implementationDate DateTime?
+  revisedLikelihood  String?
+  revisedConsequence String?
+  revisedRating      String?
+  dueDate            DateTime?
+  regulatoryRefs     String   @default("[]")
+  notes              String?
+
+  // §5.55 — ALARP & Risk Acceptance
+  alarpJustification  String?
+  riskAcceptedById    String?
+  riskAcceptedAt      DateTime?
+  riskAcceptanceNotes String?
+
+  // §5.95 — Records retention
+  retentionCategory  String?
+  retentionExpiresAt DateTime?
+  archivedAt         DateTime?
+  archiveReason      String?
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  location        Location @relation(fields: [locationId], references: [id])
+  responsibleUser User?    @relation("ResponsiblePerson", fields: [responsibleUserId], references: [id])
+  riskAcceptedBy  User?    @relation("RiskAcceptedBy", fields: [riskAcceptedById], references: [id])
+
+  @@map("risk_register")
+}
+
+model Incident {
+  id                 String    @id @default(uuid())
+  locationId         String
+  hazardReportId     String?   @unique
+  status             String    @default("Submitted")
+  assignedToId       String?
+  investigationNotes String?
+  correctiveAction   String?
+  followUpDate       DateTime?
+  closedAt           DateTime?
+  regulatoryRefs     String    @default("[]")
+  timeline           String    @default("[]")
+
+  // §5.73 — SRM fields for incident investigation (matches HazardReport)
+  rootCauseAnalysis        String?
+  contributingFactors      String    @default("[]")
+  investigationCompletedAt DateTime?
+  investigatedById         String?
+
+  initialLikelihood  String?
+  initialConsequence String?
+  initialRiskRating  String?
+
+  controlMeasures   String?
+  controlType       String?
+  sopUpdated        Boolean  @default(false)
+  trainingUpdated   Boolean  @default(false)
+  equipmentUpgraded Boolean  @default(false)
+
+  actionAssignedToId String?
+  actionDueDate      DateTime?
+  actionCompletedAt  DateTime?
+  actionNotes        String?
+
+  residualLikelihood  String?
+  residualConsequence String?
+  residualRiskRating  String?
+
+  alarpJustification   String?
+  riskAcceptedById     String?
+  riskAcceptedAt       DateTime?
+
+  verificationStatus      String?  @default("Pending")
+  verificationNotes       String?
+  verificationCompletedAt DateTime?
+  verifiedById            String?
+
+  notificationLog String @default("[]")
+
+  // §5.95 — Records retention
+  retentionCategory  String?
+  retentionExpiresAt DateTime?
+  archivedAt         DateTime?
+  archiveReason      String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  location     Location      @relation(fields: [locationId], references: [id])
+  hazardReport HazardReport? @relation(fields: [hazardReportId], references: [id])
+  assignedTo   User?         @relation("AssignedIncidents", fields: [assignedToId], references: [id])
+
+  @@map("incidents")
+}
+
+model Document {
+  id             String    @id @default(uuid())
+  locationId     String?
+  title          String
+  type           String
+  version        String    @default("1.0")
+  fileUrl        String?
+  status         String    @default("Draft")
+  effectiveDate  DateTime?
+  approvedById   String?
+  regulatoryRefs String    @default("[]")
+  parentId       String?
+
+  // §5.95 — Records retention
+  retentionCategory  String?
+  retentionExpiresAt DateTime?
+  archivedAt         DateTime?
+  archiveReason      String?
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  location   Location?  @relation(fields: [locationId], references: [id])
+  approvedBy User?      @relation("ApprovedDocuments", fields: [approvedById], references: [id])
+  parent     Document?  @relation("DocumentVersions", fields: [parentId], references: [id])
+  versions   Document[] @relation("DocumentVersions")
+
+  @@map("documents")
+}
+
+model Kpi {
+  id             String   @id @default(uuid())
+  locationId     String
+  name           String
+  frequency      String   @default("Monthly")
+  targetValue    Float
+  currentValue   Float?
+  measureMethod  String?
+  status         String?
+  regulatoryRefs String   @default("[]")
+  history        String   @default("[]")
+
+  // §5.75 — SPI attributes
+  indicatorType      String?   // "leading" | "lagging"
+  alertThreshold     Float?
+  alertDirection     String?   // "above" | "below"
+  dataSource         String?
+  responsibleUserId  String?
+  lastMeasuredById   String?
+  lastMeasuredAt     DateTime?
+  notes              String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@map("kpis")
+}
+
+model Meeting {
+  id          String   @id @default(uuid())
+  locationId  String
+  date        DateTime
+  attendees   String   @default("[]")
+  agenda      String?
+  notes       String?
+  actionItems String   @default("[]")
+
+  // §5.95 — Records retention
+  retentionCategory  String?
+  retentionExpiresAt DateTime?
+  archivedAt         DateTime?
+  archiveReason      String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@map("meetings")
+}
+
+model ErpExercise {
+  id           String   @id @default(uuid())
+  locationId   String
+  date         DateTime
+  type         String
+  participants String   @default("[]")
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@map("erp_exercises")
+}
+
+model ErpContact {
+  id         String   @id @default(uuid())
+  locationId String
+  role       String
+  name       String
+  phone      String?
+  email      String?
+  priority   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@map("erp_contacts")
+}
+
+model AuditItem {
+  id                String    @id @default(uuid())
+  locationId        String
+  title             String
+  description       String?
+  checklistItems    String    @default("[]")
+  status            String    @default("Scheduled")
+  scheduledDate     DateTime?
+  completedDate     DateTime?
+  findings          String?
+  correctiveActions String    @default("[]")
+  frequency         String?
+  regulatoryRefs    String    @default("[]")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@map("audit_items")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  userRole   String?
+  action     String
+  tableName  String
+  recordId   String?
+  oldValue   String?
+  newValue   String?
+  ipAddress  String?
+  locationId String?
+
+  // §5.95 — Records retention
+  retentionCategory  String?
+  retentionExpiresAt DateTime?
+  archivedAt         DateTime?
+  archiveReason      String?
+
+  createdAt  DateTime @default(now())
+
+  user     User?     @relation(fields: [userId], references: [id])
+  location Location? @relation(fields: [locationId], references: [id])
+
+  @@map("audit_log")
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String
+  locationId String?
+  message    String
+  type       String   @default("info")
+  read       Boolean  @default(false)
+  link       String?
+  createdAt  DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id])
+  location Location? @relation(fields: [locationId], references: [id])
+
+  @@map("notifications")
+}
+
+// §5.23 — Safety Accountability Matrix
+model SafetyAccountability {
+  id               String  @id @default(uuid())
+  locationId       String?
+  position         String
+  smsRole          String
+  responsibilities String
+  authority        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  location Location? @relation(fields: [locationId], references: [id])
+
+  @@map("safety_accountability")
+}
+
+// §5.57 — Interfacing Organizations
+model InterfacingOrganization {
+  id           String  @id @default(uuid())
+  locationId   String
+  name         String
+  contactEmail String?
+  contactPhone String?
+  orgType      String  // "uspa" | "aircraft_owner" | "contracted_pilot" | "shared_dz" | "other"
+  isActive     Boolean @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  location      Location @relation(fields: [locationId], references: [id])
+  notifications HazardNotification[]
+
+  @@map("interfacing_organizations")
+}
+
+// §5.57 — Hazard Notifications to external organizations
+model HazardNotification {
+  id                 String   @id @default(uuid())
+  hazardReportId     String?
+  organizationId     String
+  notifiedAt         DateTime @default(now())
+  notificationMethod String   // "email" | "phone" | "in_person" | "written"
+  summary            String
+  sentById           String
+  acknowledged       Boolean  @default(false)
+  acknowledgedAt     DateTime?
+
+  hazardReport HazardReport?         @relation(fields: [hazardReportId], references: [id])
+  organization InterfacingOrganization @relation(fields: [organizationId], references: [id])
+  sentBy       User                  @relation("NotificationSentBy", fields: [sentById], references: [id])
+
+  @@map("hazard_notifications")
+}
+
+// §5.91 — SMS Training Records
+model TrainingRecord {
+  id           String    @id @default(uuid())
+  userId       String
+  locationId   String
+  trainingType String    // "sms_initial" | "sms_recurrent" | "erp" | "hazard_reporting" | "risk_assessment" | "just_culture" | "other"
+  completedAt  DateTime
+  expiresAt    DateTime?
+  deliveredBy  String?
+  notes        String?
+  documentUrl  String?
+  createdById  String?
+
+  // §5.95 — Records retention
+  retentionCategory  String?
+  retentionExpiresAt DateTime?
+  archivedAt         DateTime?
+  archiveReason      String?
+
+  createdAt    DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id])
+  location  Location  @relation(fields: [locationId], references: [id])
+  createdBy User?     @relation("TrainingCreatedBy", fields: [createdById], references: [id])
+
+  @@map("training_records")
+}
+
+// §5.93 — Safety Bulletins / Lessons Learned
+model SafetyBulletin {
+  id               String   @id @default(uuid())
+  sourceLocationId String?
+  title            String
+  bulletinNumber   String
+  type             String   // "safety_alert" | "lessons_learned" | "regulatory_update" | "procedure_change"
+  summary          String
+  content          String
+  linkedHazardId   String?
+  regulatoryRefs   String   @default("[]")
+  publishedAt      DateTime?
+  status           String   @default("Draft")  // Draft / Published / Archived
+  publishedById    String?
+  acknowledgedBy   String   @default("[]")     // JSON array of user IDs
+
+  // §5.95 — Records retention
+  retentionCategory  String?
+  retentionExpiresAt DateTime?
+  archivedAt         DateTime?
+  archiveReason      String?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  sourceLocation Location? @relation(fields: [sourceLocationId], references: [id])
+  publishedBy    User?     @relation("BulletinPublishedBy", fields: [publishedById], references: [id])
+
+  @@map("safety_bulletins")
+}
+
+// §5.51 — Change Management
+model ChangeRequest {
+  id              String   @id @default(uuid())
+  locationId      String
+  changeType      String   // "aircraft" | "procedure" | "personnel" | "equipment" | "facility" | "regulatory" | "other"
+  description     String
+  proposedDate    DateTime?
+  status          String   @default("Submitted") // Submitted / SRM_Required / SRM_Complete / Approved / Implemented
+  linkedHazardIds String   @default("[]")
+  approvedById    String?
+  approvedAt      DateTime?
+  implementedAt   DateTime?
+  notes           String?
+  createdById     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  location   Location @relation(fields: [locationId], references: [id])
+  createdBy  User     @relation("ChangeCreatedBy", fields: [createdById], references: [id])
+  approvedBy User?    @relation("ChangeApprovedBy", fields: [approvedById], references: [id])
+
+  @@map("change_requests")
+}
+
+// §5.27 — ERP Document tracking
+model ErpDocument {
+  id            String   @id @default(uuid())
+  locationId    String
+  title         String   @default("Emergency Response Plan")
+  version       String   @default("1.0")
+  fileUrl       String?
+  status        String   @default("Draft")
+  effectiveDate DateTime?
+  createdById   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  location  Location @relation(fields: [locationId], references: [id])
+
+  @@map("erp_documents")
+}
