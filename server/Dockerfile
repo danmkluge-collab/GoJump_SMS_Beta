@@ -12,9 +12,8 @@ RUN npx prisma generate
 
 # Copy source
 COPY src ./src
-COPY public ./public
 
-# Create uploads dir
+# Create uploads and public dirs (generated at runtime)
 RUN mkdir -p uploads public/qr
 
 EXPOSE 4000
