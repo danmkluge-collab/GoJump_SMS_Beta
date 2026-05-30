@@ -7,7 +7,7 @@ import {
   CONTRIBUTING_FACTORS_OPTIONS, CONTROL_TYPES, VERIFICATION_STATUSES,
 } from '../utils/helpers';
 import {
-  CheckCircleIcon, ExclamationTriangleIcon, InformationCircleIcon,
+  CheckCircleIcon, ExclamationTriangleIcon,
   ClockIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
@@ -149,8 +149,6 @@ function RiskMatrix({ likelihood, consequence, onSelect, readOnly, label }) {
 
 // ── Tab 1: Overview ───────────────────────────────────────────────────────────
 function OverviewTab({ incident, users }) {
-  const findUser = (id) => users.find((u) => u.id === id);
-
   const SEVERITY_COLORS = {
     Low: 'bg-green-100 text-green-700', Medium: 'bg-yellow-100 text-yellow-700',
     High: 'bg-orange-100 text-orange-700', Critical: 'bg-red-100 text-red-700',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { formatDate, daysAgo } from '../utils/helpers';
+import { formatDate } from '../utils/helpers';
 import PageHeader from '../components/common/PageHeader';
 import Modal from '../components/common/Modal';
 import LocationSelect from '../components/common/LocationSelect';
@@ -13,7 +13,7 @@ export default function ERP() {
   const [exercises, setExercises] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [erpStatus, setErpStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [locationId, setLocationId] = useState('');
   const [showExerciseForm, setShowExerciseForm] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);

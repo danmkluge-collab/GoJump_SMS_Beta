@@ -10,7 +10,7 @@ import {
 } from '../utils/helpers';
 import {
   CheckCircleIcon, ExclamationTriangleIcon, InformationCircleIcon,
-  PaperAirplaneIcon, ClockIcon, UserIcon,
+  PaperAirplaneIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
@@ -139,7 +139,7 @@ function RiskMatrix({ likelihood, consequence, onSelect, readOnly, label }) {
 }
 
 // ── Action status badge ───────────────────────────────────────────────────────
-function ActionStatusBadge({ dueDate, completedAt, status }) {
+function ActionStatusBadge({ dueDate, completedAt }) {
   if (completedAt) return <span className="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700 font-medium">Complete</span>;
   if (dueDate && new Date(dueDate) < new Date()) return <span className="px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-700 font-medium">Overdue</span>;
   if (dueDate) return <span className="px-2 py-0.5 rounded-full text-xs bg-yellow-100 text-yellow-700 font-medium">In Progress</span>;

@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { formatDate, formatDateTime } from '../utils/helpers';
+import { formatDate } from '../utils/helpers';
 import LocationSelect from '../components/common/LocationSelect';
 import toast from 'react-hot-toast';
 

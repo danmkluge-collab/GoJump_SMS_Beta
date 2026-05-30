@@ -34,7 +34,7 @@ function StatusBadge({ status }) {
 }
 
 export default function ChangeManagement() {
-  const { user, isAdmin, isSTA } = useAuth();
+  const { isAdmin, isSTA } = useAuth();
   const canEdit = isAdmin || isSTA;
 
   const [requests, setRequests] = useState([]);

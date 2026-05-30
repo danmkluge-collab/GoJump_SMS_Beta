@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { formatDate, REGULATORY_REFS } from '../utils/helpers';
+import { formatDate } from '../utils/helpers';
 import PageHeader from '../components/common/PageHeader';
 import Modal from '../components/common/Modal';
 import LocationSelect from '../components/common/LocationSelect';

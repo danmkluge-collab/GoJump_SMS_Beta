@@ -36,7 +36,7 @@ function StageBadge({ status }) {
 }
 
 export default function HazardReports() {
-  const { isSTA, isAdmin, user } = useAuth();
+  const { isAdmin } = useAuth();
   const [reports, setReports] = useState([]);
   const [total, setTotal]     = useState(0);
   const [loading, setLoading] = useState(true);
