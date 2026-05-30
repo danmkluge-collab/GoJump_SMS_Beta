@@ -1,6 +1,9 @@
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
+
+# Install OpenSSL — required by Prisma's query engine
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies first (cache layer)
 COPY package*.json ./
@@ -18,5 +21,5 @@ RUN mkdir -p uploads public/qr
 
 EXPOSE 4000
 
-# Run migrations then seed then start
-CMD ["sh", "-c", "npx prisma migrate deploy && node prisma/seed.js && node src/index.js"]
+# Push schema to DB, seed, then start
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && node prisma/seed.js && node src/index.js"]
