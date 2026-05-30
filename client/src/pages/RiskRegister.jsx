@@ -256,6 +256,7 @@ export default function RiskRegister() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [locationId, filterRisk]);
 
   const handleCreate = async (form) => {

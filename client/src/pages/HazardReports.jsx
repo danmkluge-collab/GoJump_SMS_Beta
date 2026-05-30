@@ -71,6 +71,7 @@ export default function HazardReports() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [
     filters.locationId, filters.status, filters.severity,
     filters.overdue, filters.assignedTo, filters.from, filters.to,

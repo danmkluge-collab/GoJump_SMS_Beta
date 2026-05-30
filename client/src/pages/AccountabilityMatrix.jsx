@@ -51,6 +51,7 @@ export default function AccountabilityMatrix() {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, []);
 
   const openCreate = () => {

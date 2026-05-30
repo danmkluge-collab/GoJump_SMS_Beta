@@ -40,6 +40,7 @@ export default function ERP() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [locationId]);
 
   const handleLogExercise = async (e) => {

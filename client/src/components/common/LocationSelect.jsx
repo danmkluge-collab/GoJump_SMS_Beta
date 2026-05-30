@@ -3,7 +3,7 @@ import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 
 export default function LocationSelect({ value, onChange, className = '' }) {
-  const { user, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const [locations, setLocations] = useState([]);
 
   useEffect(() => {

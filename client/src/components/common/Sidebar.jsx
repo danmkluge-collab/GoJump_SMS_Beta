@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
   HomeIcon, ExclamationTriangleIcon, ShieldCheckIcon,
   DocumentTextIcon, ClipboardDocumentListIcon, ChartBarIcon,
-  UserGroupIcon, BellIcon, QrCodeIcon, ClipboardDocumentCheckIcon,
+  UserGroupIcon, QrCodeIcon, ClipboardDocumentCheckIcon,
   BookOpenIcon, PhoneIcon, ArrowRightOnRectangleIcon, UsersIcon,
   AcademicCapIcon, MegaphoneIcon, TableCellsIcon,
   ArrowPathIcon, InformationCircleIcon, ArchiveBoxIcon,

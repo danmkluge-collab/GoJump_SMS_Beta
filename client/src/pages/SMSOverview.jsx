@@ -101,7 +101,7 @@ function StatCard({ label, value, sub, color = 'gray' }) {
 }
 
 export default function SMSOverview() {
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
   const [stats, setStats] = useState(null);
   const [aeInfo, setAeInfo] = useState(null);
   const [loading, setLoading] = useState(true);

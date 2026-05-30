@@ -127,6 +127,7 @@ export default function Dashboard() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [locationId]);
 
   const handleExport = async (format) => {

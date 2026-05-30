@@ -37,6 +37,7 @@ export default function AuditLog() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [locationId, tableName, page]);
 
   const TABLES = ['hazard_reports', 'risk_register', 'incidents', 'documents', 'kpis', 'meetings', 'erp_exercises', 'audit_items'];

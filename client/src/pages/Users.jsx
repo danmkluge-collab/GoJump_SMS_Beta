@@ -63,6 +63,7 @@ export default function Users() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, []);
 
   const handleCreate = async (e) => {

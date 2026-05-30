@@ -28,6 +28,7 @@ export default function Meetings() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [locationId]);
 
   const handleCreate = async (e) => {

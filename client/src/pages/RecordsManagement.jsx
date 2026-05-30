@@ -128,6 +128,7 @@ export default function RecordsManagement() {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, []);
 
   const totalRecords = summary

@@ -40,6 +40,7 @@ export default function Documents() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [locationId, filterStatus]);
 
   const handleCreate = async (e) => {

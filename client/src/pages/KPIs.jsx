@@ -16,7 +16,6 @@ export default function KPIs() {
   const [kpis, setKpis] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editing, setEditing] = useState(null);
   const [updating, setUpdating] = useState(null);
   const [locationId, setLocationId] = useState('');
   const [form, setForm] = useState({ name: '', frequency: 'Monthly', targetValue: '', measureMethod: '', regulatoryRefs: [] });
@@ -32,6 +31,7 @@ export default function KPIs() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [locationId]);
 
   const handleCreate = async (e) => {

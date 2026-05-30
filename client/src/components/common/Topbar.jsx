@@ -31,8 +31,6 @@ export default function Topbar({ onMenuClick }) {
     setShowDropdown(false);
   };
 
-  const typeColors = { danger: 'bg-red-50 border-red-200', warning: 'bg-yellow-50 border-yellow-200', info: 'bg-blue-50 border-blue-200' };
-
   return (
     <header className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between flex-shrink-0">
       <button onClick={onMenuClick} className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600">

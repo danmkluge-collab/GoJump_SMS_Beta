@@ -52,6 +52,7 @@ export default function Incidents() {
     finally { setLoading(false); }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [locationId, filterStatus]);
 
   const openCreate = async () => {

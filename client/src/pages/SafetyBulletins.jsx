@@ -224,6 +224,7 @@ export default function SafetyBulletins() {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, []);
 
   const handleSubmit = async (e) => {
