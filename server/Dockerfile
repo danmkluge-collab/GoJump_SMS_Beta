@@ -2,14 +2,16 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Install OpenSSL — required by Prisma's query engine
-RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Install OpenSSL 3.x — required by Prisma query engine on Debian Bookworm
+RUN apt-get update -y && \
+    apt-get install -y openssl libssl-dev ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install dependencies first (cache layer)
 COPY package*.json ./
 RUN npm ci --only=production
 
-# Copy Prisma schema and generate client
+# Copy Prisma schema and generate client (uses debian-openssl-3.0.x binary)
 COPY prisma ./prisma
 RUN npx prisma generate
 
