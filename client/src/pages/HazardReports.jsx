@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import {
-  formatDate, formatDateTime, HAZARD_TYPES, SEVERITIES,
+  formatDate, SEVERITIES,
   LIFECYCLE_STAGES, STAGE_LABELS, LIFECYCLE_COLORS, LIFECYCLE_BORDER,
 } from '../utils/helpers';
 import PageHeader from '../components/common/PageHeader';

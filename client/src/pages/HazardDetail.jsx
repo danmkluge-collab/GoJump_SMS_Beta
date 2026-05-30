@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import {
-  formatDate, formatDateTime, calculateRisk,
+  formatDateTime, calculateRisk,
   LIKELIHOODS, CONSEQUENCES,
   LIFECYCLE_STAGES, STAGE_LABELS, ADVANCE_LABELS, LIFECYCLE_COLORS,
   STAGE_REG_REFS, REG_REF_SUMMARIES,
@@ -666,7 +666,6 @@ export default function HazardDetail({ reportId, onClose }) {
     </div>
   );
 
-  const currentIdx = LIFECYCLE_STAGES.indexOf(report.status);
   const isClosed   = report.status === 'Closed';
   const nextLabel  = !isClosed ? ADVANCE_LABELS[report.status] : null;
 
